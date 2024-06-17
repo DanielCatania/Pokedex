@@ -1,18 +1,13 @@
 import { pokemonCard } from "@/types/pokemon";
-import setState from "@/types/setState";
 
-async function getPokemonsList(
-  url: string,
-  setUrl: setState<string>,
-  setPokemonsList: setState<pokemonCard[]>
-) {
+async function getPokemonsList(url: string) {
   const response = await fetch(url);
   const data = await response.json();
+  const newUrl = data.next;
 
-  setUrl(data.next);
   const pokemonsCallingCard = data.results;
 
-  pokemonsCallingCard.forEach(async (callingCard) => {
+  const pokemonsPromises = pokemonsCallingCard.map(async (callingCard) => {
     const response = await fetch(callingCard.url);
     const pokemonDescription = await response.json();
     const id = pokemonDescription.id;
@@ -21,15 +16,19 @@ async function getPokemonsList(
 
     pokemonDescription.types.forEach(({ type }) => types.push(type.name));
 
-    const pokemon: pokemonCard = {
+    const pokemonCard: pokemonCard = {
       id,
       name: pokemonDescription.name,
       types,
       imgUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
     };
 
-    setPokemonsList((current) => [...current, pokemon]);
+    return pokemonCard;
   });
+
+  const pokemonsList = await Promise.all(pokemonsPromises);
+
+  return [newUrl, pokemonsList];
 }
 
 export default getPokemonsList;
