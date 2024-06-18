@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { InferGetStaticPropsType } from "next";
 import Text from "@/components/Text";
 import getPokemonsList from "@/service/getPokemonsList";
 import { pokemonCard } from "@/types/pokemon";
-import { InferGetStaticPropsType } from "next";
+import Lottie from "react-lottie";
+import loadAnimationData from "@/lottie/animation-load.json";
 
 export const getStaticProps = async () => {
   const urlPokemonsList: string =
@@ -68,7 +70,20 @@ export default function HomeScreen({
             </ul>
           </li>
         ))}
-        <li ref={sentryRef} />
+        <li ref={sentryRef}>
+          <Lottie
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: loadAnimationData,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            height={128}
+            width={128}
+          />
+        </li>
       </ul>
     </>
   );
