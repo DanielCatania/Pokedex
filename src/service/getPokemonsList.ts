@@ -1,6 +1,16 @@
 import { pokemonCard } from "@/types/pokemon";
+import setState from "@/types/setState";
 
-async function getPokemonsList(url: string) {
+async function getPokemonsList(
+  url: string,
+  options?: {
+    local?: "client" | "server";
+    clientNotifiers?: {
+      url: setState<string>;
+      pokemonsList: setState<pokemonCard[]>;
+    };
+  }
+) {
   const response = await fetch(url);
   const data = await response.json();
   const newUrl = data.next;
@@ -27,6 +37,14 @@ async function getPokemonsList(url: string) {
   });
 
   const pokemonsList = await Promise.all(pokemonsPromises);
+
+  if (options?.local === "client") {
+    options.clientNotifiers?.pokemonsList((current) => [
+      ...current,
+      ...pokemonsList,
+    ]);
+    options.clientNotifiers?.url(newUrl);
+  }
 
   return [newUrl, pokemonsList];
 }
