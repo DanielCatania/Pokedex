@@ -11,7 +11,7 @@ import { getStaticProps } from "@/pages/index";
 import { pokemonCard } from "@/types/pokemon";
 import getPokemonsList from "@/service/getPokemonsList";
 import PokemonCard from "./components/PokemonCard";
-import { PokemonsGrid } from "./style";
+import { Main, PokemonsGrid } from "./style";
 
 export default function HomeScreen({
   initialPokemonsList,
@@ -51,25 +51,27 @@ export default function HomeScreen({
   return (
     <>
       <Text>Pokédex</Text>
-      <PokemonsGrid>
-        {pokemonsList.map((pokemonCard) => (
-          <PokemonCard pokemonData={pokemonCard} key={pokemonCard.id} />
-        ))}
-        <span ref={sentryRef}>
-          <Lottie
-            options={{
-              loop: true,
-              autoplay: true,
-              animationData: loadAnimationData,
-              rendererSettings: {
-                preserveAspectRatio: "xMidYMid slice",
-              },
-            }}
-            height={128}
-            width={128}
-          />
-        </span>
-      </PokemonsGrid>
+      <Main>
+        <PokemonsGrid>
+          {pokemonsList.map((pokemonCard) => (
+            <PokemonCard pokemonData={pokemonCard} key={pokemonCard.id} />
+          ))}
+          <span id="sentry" ref={sentryRef}>
+            <Lottie
+              options={{
+                loop: true,
+                autoplay: true,
+                animationData: loadAnimationData,
+                rendererSettings: {
+                  preserveAspectRatio: "xMidYMid slice",
+                },
+              }}
+              height={128}
+              width={128}
+            />
+          </span>
+        </PokemonsGrid>
+      </Main>
     </>
   );
 }
