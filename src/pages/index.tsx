@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Text from "@/components/Text";
 import getPokemonsList from "@/service/getPokemonsList";
 import { pokemonCard } from "@/types/pokemon";
@@ -27,6 +27,31 @@ export default function HomeScreen({
   const [pokemonsList, setPokemonsList] =
     useState<pokemonCard[]>(initialPokemonsList);
 
+  const sentryRef = useRef(null);
+  const [sentryIsVisble, setSentryIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      setSentryIsVisible(entries[0].isIntersecting);
+    });
+
+    observer.observe(sentryRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (sentryIsVisble) {
+      getPokemonsList(urlPokemonsList, {
+        local: "client",
+        clientNotifiers: {
+          url: setUrlPokemonsList,
+          pokemonsList: setPokemonsList,
+        },
+      });
+    }
+  }, [sentryIsVisble, urlPokemonsList]);
+
   return (
     <>
       <Text>Pokédex</Text>
@@ -43,16 +68,8 @@ export default function HomeScreen({
             </ul>
           </li>
         ))}
+        <li ref={sentryRef} />
       </ul>
-      <button
-        onClick={async () => {
-          const [newUrl, pokemonsList] = await getPokemonsList(urlPokemonsList);
-          setUrlPokemonsList(newUrl);
-          setPokemonsList((current) => [...current, ...pokemonsList]);
-        }}
-      >
-        Load more pokémons
-      </button>
     </>
   );
 }
