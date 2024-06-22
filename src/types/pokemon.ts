@@ -18,7 +18,6 @@ type pokemonData = {
   imgUrl: string;
 
   abilities: string[];
-  moves: pokemonMove[];
   weight: string;
   height: string;
 };

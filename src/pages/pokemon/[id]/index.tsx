@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import pokemonData, { pokemonMove } from "@/types/pokemon";
+import pokemonData from "@/types/pokemon";
 import Text from "@/components/Text";
 import Link from "next/link";
 
@@ -23,32 +23,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const abilities: string[] = [];
     data.abilities.forEach(({ ability }) => abilities.push(ability.name));
 
-    const movesPromises = data.moves.map(async (callingCard) => {
-      try {
-        const { name } = callingCard.move;
-
-        const response = await fetch(callingCard.move.url);
-        console.log(response);
-        const moveDescription = await response.json();
-
-        const move: pokemonMove = {
-          id: moveDescription.id,
-          name,
-          effect: moveDescription.effect_entries[0].short_effect,
-        };
-
-        return move;
-      } catch (error) {
-        return {
-          id: "error",
-          name: "error",
-          effect: "error",
-        };
-      }
-    });
-
-    const moves = await Promise.all(movesPromises);
-
     const pokemonData = {
       id: data.id,
       name: data.name,
@@ -57,7 +31,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       abilities,
       weight: data.weight,
       height: data.height,
-      moves,
     };
     return {
       props: {
@@ -98,19 +71,7 @@ export default function PokemonScreen({
             <li key={ability}>{ability}</li>
           ))}
         </ul>
-        <ul>
-          {pokemonData.moves.map((move) => {
-            if (move.id === "error") {
-              return <></>;
-            }
-            return (
-              <li key={move.id}>
-                <Text>{move.name}</Text>
-                <Text>{move.effect}</Text>
-              </li>
-            );
-          })}
-        </ul>
+        <Link href={`/pokemon/${pokemonData.id}/moves`}>Moves</Link>
       </main>
     </>
   );
