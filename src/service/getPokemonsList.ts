@@ -4,6 +4,7 @@ import setState from "@/types/setState";
 async function getPokemonsList(
   url: string,
   options?: {
+    urlType?: "pokemon" | "type";
     local?: "client" | "server";
     clientNotifiers?: {
       url: setState<string>;
@@ -15,10 +16,13 @@ async function getPokemonsList(
   const data = await response.json();
   const newUrl = data.next;
 
-  const pokemonsCallingCard = data.results;
+  const pokemonsCallingCard =
+    options?.urlType !== "type" ? data.results : data.pokemon;
 
   const pokemonsPromises = pokemonsCallingCard.map(async (callingCard) => {
-    const response = await fetch(callingCard.url);
+    const url =
+      options?.urlType !== "type" ? callingCard.url : callingCard.pokemon.url;
+    const response = await fetch(url);
     const pokemonDescription = await response.json();
     const id = pokemonDescription.id;
 
@@ -39,10 +43,15 @@ async function getPokemonsList(
   const pokemonsList = await Promise.all(pokemonsPromises);
 
   if (options?.local === "client") {
-    options.clientNotifiers?.pokemonsList((current) => [
-      ...current,
-      ...pokemonsList,
-    ]);
+    if (options?.urlType === "type") {
+      options.clientNotifiers?.pokemonsList(pokemonsList);
+    } else {
+      options.clientNotifiers?.pokemonsList((current) => [
+        ...current,
+        ...pokemonsList,
+      ]);
+    }
+
     options.clientNotifiers?.url(newUrl);
   }
 

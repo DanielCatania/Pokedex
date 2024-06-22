@@ -16,6 +16,8 @@ import { Main, PokemonsGrid } from "./style";
 export default function HomeScreen({
   initialPokemonsList,
   initialUrlPokemonsList,
+  baseUrlPokemonsList,
+  types,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [urlPokemonsList, setUrlPokemonsList] = useState(
     initialUrlPokemonsList
@@ -57,10 +59,55 @@ export default function HomeScreen({
     <>
       <Text>Pokédex</Text>
       <Main>
-        <PokemonsGrid>
-          {pokemonsList.map((pokemonCard, i) => (
-            <PokemonCard pokemonData={pokemonCard} key={pokemonCard.id + i} />
+        <select
+          name="type"
+          id="type"
+          onChange={(e) => {
+            if (e.target.value === "base") {
+              setPokemonsList([]);
+              getPokemonsList(baseUrlPokemonsList, {
+                local: "client",
+                urlType: "pokemon",
+                clientNotifiers: {
+                  url: setUrlPokemonsList,
+                  pokemonsList: setPokemonsList,
+                },
+              });
+              sentryRef.current.classList = "";
+
+              return;
+            }
+            getPokemonsList(e.target.value, {
+              local: "client",
+              urlType: "type",
+              clientNotifiers: {
+                url: setUrlPokemonsList,
+                pokemonsList: setPokemonsList,
+              },
+            });
+            sentryRef.current.classList = "invisible";
+          }}
+        >
+          <option value="base">Find Pokemon By Type</option>
+          {types.map((type, i) => (
+            <option key={type.name + i} value={type.url}>
+              {type.name}
+            </option>
           ))}
+        </select>
+        <PokemonsGrid>
+          {pokemonsList.length === 0 ? (
+            <Text>No Pokémon found</Text>
+          ) : (
+            <>
+              {pokemonsList.map((pokemonCard, i) => (
+                <PokemonCard
+                  pokemonData={pokemonCard}
+                  key={pokemonCard.id + i}
+                />
+              ))}
+            </>
+          )}
           <span id="sentry" ref={sentryRef}>
             <Lottie
               options={{
