@@ -21,7 +21,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         const { name } = callingCard.move;
 
         const response = await fetch(callingCard.move.url);
-        console.log(response);
         const moveDescription = await response.json();
 
         const move: pokemonMove = {
