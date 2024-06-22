@@ -37,6 +37,11 @@ export default function HomeScreen({
   }, []);
 
   useEffect(() => {
+    if (urlPokemonsList === null) {
+      sentryRef.current.classList = "invisible";
+      return;
+    }
+
     if (sentryIsVisble) {
       getPokemonsList(urlPokemonsList, {
         local: "client",
@@ -53,8 +58,8 @@ export default function HomeScreen({
       <Text>Pokédex</Text>
       <Main>
         <PokemonsGrid>
-          {pokemonsList.map((pokemonCard) => (
-            <PokemonCard pokemonData={pokemonCard} key={pokemonCard.id} />
+          {pokemonsList.map((pokemonCard, i) => (
+            <PokemonCard pokemonData={pokemonCard} key={pokemonCard.id + i} />
           ))}
           <span id="sentry" ref={sentryRef}>
             <Lottie

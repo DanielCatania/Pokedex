@@ -22,4 +22,8 @@ export const PokemonsGrid = styled.section`
     right: 0;
     bottom: -120px;
   }
+
+  #sentry.invisible {
+    display: none;
+  }
 `;
