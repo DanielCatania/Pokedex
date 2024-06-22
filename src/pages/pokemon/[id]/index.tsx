@@ -1,12 +1,8 @@
-import React from "react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext } from "next";
 import pokemonData from "@/types/pokemon";
-import Text from "@/components/Text";
-import Link from "next/link";
 
 interface IgetServerSideProps {
   props: {
-    status: "200" | "404";
     pokemonData?: pokemonData;
   };
 }
@@ -34,45 +30,18 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
     return {
       props: {
-        status: "200",
         pokemonData,
       },
     } satisfies IgetServerSideProps;
   } catch (error) {
-    console.log(error);
-    return { props: { status: "404" } } satisfies IgetServerSideProps;
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/404",
+      },
+      props: {},
+    };
   }
 }
 
-export default function PokemonScreen({
-  status,
-  pokemonData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (status === "404") {
-    return <>404</>;
-  }
-
-  return (
-    <>
-      <Link href="/">Home</Link>
-      <main>
-        <img src={pokemonData.imgUrl} alt={pokemonData.name} />
-        <Text>{pokemonData.name}</Text>
-        <Text>{pokemonData.id}</Text>
-        <Text>Weight: {pokemonData.weight}</Text>
-        <Text>Height: {pokemonData.height}</Text>
-        <ul>
-          {pokemonData.types.map((type) => (
-            <li key={type}>{type}</li>
-          ))}
-        </ul>
-        <ul>
-          {pokemonData.abilities.map((ability) => (
-            <li key={ability}>{ability}</li>
-          ))}
-        </ul>
-        <Link href={`/pokemon/${pokemonData.id}/moves`}>Moves</Link>
-      </main>
-    </>
-  );
-}
+export { default } from "@/screens/PokemonScreen";

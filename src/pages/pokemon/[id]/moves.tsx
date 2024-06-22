@@ -1,12 +1,7 @@
-import React from "react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext } from "next";
 import { pokemonMove } from "@/types/pokemon";
-import Text from "@/components/Text";
-import Link from "next/link";
-
 interface IgetServerSideProps {
   props: {
-    status: "200" | "404";
     movesData?: {
       id: string;
       pokemonName: string;
@@ -54,43 +49,18 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
     return {
       props: {
-        status: "200",
         movesData,
       },
     } satisfies IgetServerSideProps;
   } catch (error) {
-    console.log(error);
-    return { props: { status: "404" } } satisfies IgetServerSideProps;
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/404",
+      },
+      props: {},
+    };
   }
 }
 
-export default function PokemonScreen({
-  status,
-  movesData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (status === "404") {
-    return <>404</>;
-  }
-
-  return (
-    <>
-      <Link href={`/pokemon/${movesData.id}`}>Back</Link>
-      <main>
-        <Text>{movesData.pokemonName} Moves</Text>
-        <ul>
-          {movesData.moves.map((move) => {
-            if (move.id === "error") {
-              return <></>;
-            }
-            return (
-              <li key={move.id}>
-                <Text>{move.name}</Text>
-                <Text>{move.effect}</Text>
-              </li>
-            );
-          })}
-        </ul>
-      </main>
-    </>
-  );
-}
+export { default } from "@/screens/PokemonScreen/moves";
