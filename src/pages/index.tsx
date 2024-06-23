@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import HomeScreen, { HomeScreenProps } from "@/screens/HomeScreen";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  useMemo,
+} from "react";
+import HomeScreen from "@/screens/HomeScreen";
 import getPokemonsList from "@/service/getPokemonsList";
 import { InferGetStaticPropsType } from "next";
 import { pokemonCard } from "@/types/pokemon";
+import handleSentry from "@/screens/HomeScreen/utils/handleSentry";
 
 export const getStaticProps = async () => {
   try {
@@ -37,6 +44,8 @@ export const getStaticProps = async () => {
   }
 };
 
+export const HomePageContext = createContext(null);
+
 export default function HomePage({
   initialPokemonsList,
   initialUrlPokemonsList,
@@ -52,6 +61,7 @@ export default function HomePage({
   const [searchInput, setSearchInput] = useState("");
 
   const sentryRef = useRef(null);
+  const sentry = useMemo(() => new handleSentry(sentryRef), [sentryRef]);
   const [sentryIsVisble, setSentryIsVisible] = useState(false);
 
   useEffect(() => {
@@ -59,14 +69,14 @@ export default function HomePage({
       setSentryIsVisible(entries[0].isIntersecting);
     });
 
-    observer.observe(sentryRef.current);
+    observer.observe(sentry.get());
 
     return () => observer.disconnect();
-  }, []);
+  }, [sentry]);
 
   useEffect(() => {
     if (urlPokemonsList === null) {
-      sentryRef.current.classList = "invisible";
+      sentry.disable();
       return;
     }
 
@@ -79,18 +89,24 @@ export default function HomePage({
         },
       });
     }
-  }, [sentryIsVisble, urlPokemonsList]);
+  }, [sentryIsVisble, urlPokemonsList, sentry]);
 
-  const HomeScreenProps: HomeScreenProps = {
+  const context = {
     setPokemonsList,
     setUrlPokemonsList,
     sentryRef,
+    sentry,
     baseUrlPokemonsList,
     pokemonsList,
     types,
     searchInput,
     setSearchInput,
+    urlPokemonsList,
   };
 
-  return <HomeScreen {...HomeScreenProps} />;
+  return (
+    <HomePageContext.Provider value={context}>
+      <HomeScreen />
+    </HomePageContext.Provider>
+  );
 }

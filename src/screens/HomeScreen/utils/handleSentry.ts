@@ -5,6 +5,10 @@ class handleSentry {
     this.sentry = sentryRef;
   }
 
+  get() {
+    return this.sentry.current;
+  }
+
   change() {
     if (this.status === "visible") {
       this.disable();
