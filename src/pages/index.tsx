@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import HomeScreen from "@/screens/HomeScreen";
+import HomeScreen, { HomeScreenProps } from "@/screens/HomeScreen";
 import getPokemonsList from "@/service/getPokemonsList";
 import { InferGetStaticPropsType } from "next";
 import { pokemonCard } from "@/types/pokemon";
@@ -49,6 +49,8 @@ export default function HomePage({
   const [pokemonsList, setPokemonsList] =
     useState<pokemonCard[]>(initialPokemonsList);
 
+  const [searchInput, setSearchInput] = useState("");
+
   const sentryRef = useRef(null);
   const [sentryIsVisble, setSentryIsVisible] = useState(false);
 
@@ -79,13 +81,15 @@ export default function HomePage({
     }
   }, [sentryIsVisble, urlPokemonsList]);
 
-  const HomeScreenProps = {
+  const HomeScreenProps: HomeScreenProps = {
     setPokemonsList,
     setUrlPokemonsList,
     sentryRef,
     baseUrlPokemonsList,
     pokemonsList,
     types,
+    searchInput,
+    setSearchInput,
   };
 
   return <HomeScreen {...HomeScreenProps} />;

@@ -1,13 +1,14 @@
 import { pokemonCard } from "@/types/pokemon";
 import getPokemonsList from "@/service/getPokemonsList";
 import setState from "@/types/setState";
+import handleSentry from "./handleSentry";
 
 function handleChangePokemonFilterType(
   e: React.ChangeEvent<HTMLSelectElement>,
   setPokemonsList: setState<pokemonCard[]>,
   setUrlPokemonsList: setState<string>,
   baseUrlPokemonsList: string,
-  sentryRef: React.MutableRefObject<any>
+  sentry: handleSentry
 ) {
   if (e.target.value === "base") {
     setPokemonsList([]);
@@ -19,7 +20,7 @@ function handleChangePokemonFilterType(
         pokemonsList: setPokemonsList,
       },
     });
-    sentryRef.current.classList = "";
+    sentry.enable();
 
     return;
   }
@@ -31,7 +32,7 @@ function handleChangePokemonFilterType(
       pokemonsList: setPokemonsList,
     },
   });
-  sentryRef.current.classList = "invisible";
+  sentry.disable();
 }
 
 export default handleChangePokemonFilterType;
