@@ -58,8 +58,6 @@ export default function HomePage({
   const [pokemonsList, setPokemonsList] =
     useState<pokemonCard[]>(initialPokemonsList);
 
-  const [searchInput, setSearchInput] = useState("");
-
   const sentryRef = useRef(null);
   const sentry = useMemo(() => new handleSentry(sentryRef), [sentryRef]);
   const [sentryIsVisble, setSentryIsVisible] = useState(false);
@@ -99,8 +97,6 @@ export default function HomePage({
     baseUrlPokemonsList,
     pokemonsList,
     types,
-    searchInput,
-    setSearchInput,
     urlPokemonsList,
   };
 

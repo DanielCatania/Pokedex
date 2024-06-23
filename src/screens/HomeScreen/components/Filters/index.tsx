@@ -1,24 +1,37 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { HomePageContext } from "@/pages";
 
 import handleChangePokemonFilterType from "../../utils/handleChangePokemonFilterType";
 import handleWithPokemonSearch from "../../utils/handleWithPokemonSearch";
 import handleChangeSearchInput from "../../utils/handleChangeSearchInput";
+import returnToInitialPokemonsList from "../../utils/returnToInitialPokemonsList";
 
 export default function Filters() {
+  const [searchInput, setSearchInput] = useState("");
+
   const {
     setPokemonsList,
     setUrlPokemonsList,
     baseUrlPokemonsList,
     types,
-    searchInput,
-    setSearchInput,
     sentry,
   } = useContext(HomePageContext);
 
   return (
     <>
+      <button
+        onClick={(e) =>
+          returnToInitialPokemonsList(
+            baseUrlPokemonsList,
+            setUrlPokemonsList,
+            setPokemonsList,
+            sentry
+          )
+        }
+      >
+        reset filters
+      </button>
       <form
         onSubmit={(e) =>
           handleWithPokemonSearch(
