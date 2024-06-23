@@ -1,12 +1,8 @@
 import React from "react";
-import { InferGetServerSidePropsType } from "next";
 import Text from "@/components/Text";
 import Link from "next/link";
-import { getServerSideProps } from "@/pages/pokemon/[id]";
 
-export default function PokemonScreen({
-  pokemonData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function PokemonScreen({ pokemonData }) {
   return (
     <>
       <Link href="/">Home</Link>

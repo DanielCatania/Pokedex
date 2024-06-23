@@ -1,60 +1,34 @@
-import React, { useState, useEffect, useRef } from "react";
-import { InferGetStaticPropsType } from "next";
-
-import Text from "@/components/Text";
+import React from "react";
 
 import Lottie from "react-lottie";
 import loadAnimationData from "@/lottie/animation-load.json";
 
-import { getStaticProps } from "@/pages/index";
-
-import { pokemonCard } from "@/types/pokemon";
-import getPokemonsList from "@/service/getPokemonsList";
+import Text from "@/components/Text";
 import PokemonCard from "./components/PokemonCard";
+
 import { Main, PokemonsGrid } from "./style";
 
+import handleChangePokemonFilterType from "./handles/handleChangePokemonFilterType";
+import setState from "@/types/setState";
+import { pokemonCard } from "@/types/pokemon";
+
+interface HomeScreenProps {
+  setPokemonsList: setState<pokemonCard[]>;
+  setUrlPokemonsList: setState<string>;
+  baseUrlPokemonsList: string;
+  sentryRef: React.MutableRefObject<any>;
+  pokemonsList: pokemonCard[];
+  types: any[];
+}
+
 export default function HomeScreen({
-  initialPokemonsList,
-  initialUrlPokemonsList,
+  setPokemonsList,
+  setUrlPokemonsList,
+  sentryRef,
   baseUrlPokemonsList,
+  pokemonsList,
   types,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [urlPokemonsList, setUrlPokemonsList] = useState(
-    initialUrlPokemonsList
-  );
-  const [pokemonsList, setPokemonsList] =
-    useState<pokemonCard[]>(initialPokemonsList);
-
-  const sentryRef = useRef(null);
-  const [sentryIsVisble, setSentryIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      setSentryIsVisible(entries[0].isIntersecting);
-    });
-
-    observer.observe(sentryRef.current);
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (urlPokemonsList === null) {
-      sentryRef.current.classList = "invisible";
-      return;
-    }
-
-    if (sentryIsVisble) {
-      getPokemonsList(urlPokemonsList, {
-        local: "client",
-        clientNotifiers: {
-          url: setUrlPokemonsList,
-          pokemonsList: setPokemonsList,
-        },
-      });
-    }
-  }, [sentryIsVisble, urlPokemonsList]);
-
+}: HomeScreenProps) {
   return (
     <>
       <Text>Pokédex</Text>
@@ -62,31 +36,15 @@ export default function HomeScreen({
         <select
           name="type"
           id="type"
-          onChange={(e) => {
-            if (e.target.value === "base") {
-              setPokemonsList([]);
-              getPokemonsList(baseUrlPokemonsList, {
-                local: "client",
-                urlType: "pokemon",
-                clientNotifiers: {
-                  url: setUrlPokemonsList,
-                  pokemonsList: setPokemonsList,
-                },
-              });
-              sentryRef.current.classList = "";
-
-              return;
-            }
-            getPokemonsList(e.target.value, {
-              local: "client",
-              urlType: "type",
-              clientNotifiers: {
-                url: setUrlPokemonsList,
-                pokemonsList: setPokemonsList,
-              },
-            });
-            sentryRef.current.classList = "invisible";
-          }}
+          onChange={(e) =>
+            handleChangePokemonFilterType(
+              e,
+              setPokemonsList,
+              setUrlPokemonsList,
+              baseUrlPokemonsList,
+              sentryRef
+            )
+          }
         >
           <option value="base">Find Pokemon By Type</option>
           {types.map((type, i) => (

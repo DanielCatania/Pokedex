@@ -1,4 +1,8 @@
+import React, { useState, useEffect, useRef } from "react";
+import HomeScreen from "@/screens/HomeScreen";
 import getPokemonsList from "@/service/getPokemonsList";
+import { InferGetStaticPropsType } from "next";
+import { pokemonCard } from "@/types/pokemon";
 
 export const getStaticProps = async () => {
   try {
@@ -33,4 +37,56 @@ export const getStaticProps = async () => {
   }
 };
 
-export { default } from "@/screens/HomeScreen";
+export default function HomePage({
+  initialPokemonsList,
+  initialUrlPokemonsList,
+  baseUrlPokemonsList,
+  types,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [urlPokemonsList, setUrlPokemonsList] = useState(
+    initialUrlPokemonsList
+  );
+  const [pokemonsList, setPokemonsList] =
+    useState<pokemonCard[]>(initialPokemonsList);
+
+  const sentryRef = useRef(null);
+  const [sentryIsVisble, setSentryIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      setSentryIsVisible(entries[0].isIntersecting);
+    });
+
+    observer.observe(sentryRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (urlPokemonsList === null) {
+      sentryRef.current.classList = "invisible";
+      return;
+    }
+
+    if (sentryIsVisble) {
+      getPokemonsList(urlPokemonsList, {
+        local: "client",
+        clientNotifiers: {
+          url: setUrlPokemonsList,
+          pokemonsList: setPokemonsList,
+        },
+      });
+    }
+  }, [sentryIsVisble, urlPokemonsList]);
+
+  const HomeScreenProps = {
+    setPokemonsList,
+    setUrlPokemonsList,
+    sentryRef,
+    baseUrlPokemonsList,
+    pokemonsList,
+    types,
+  };
+
+  return <HomeScreen {...HomeScreenProps} />;
+}

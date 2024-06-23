@@ -1,5 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import pokemonData from "@/types/pokemon";
+import PokemonScreen from "@/screens/PokemonScreen";
+import { InferGetServerSidePropsType } from "next";
 
 interface IgetServerSideProps {
   props: {
@@ -44,4 +46,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   }
 }
 
-export { default } from "@/screens/PokemonScreen";
+export default function PokemonPage({
+  pokemonData,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const PokemonScreenProps = { pokemonData };
+  return <PokemonScreen {...PokemonScreenProps} />;
+}

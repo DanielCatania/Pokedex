@@ -1,5 +1,7 @@
-import { GetServerSidePropsContext } from "next";
+import React from "react";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { pokemonMove } from "@/types/pokemon";
+import MovesScreen from "@/screens/PokemonScreen/moves";
 interface IgetServerSideProps {
   props: {
     movesData?: {
@@ -62,4 +64,11 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   }
 }
 
-export { default } from "@/screens/PokemonScreen/moves";
+export default function MovesPage({
+  movesData,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const MovesScreenProps = {
+    movesData,
+  };
+  return <MovesScreen {...MovesScreenProps} />;
+}
