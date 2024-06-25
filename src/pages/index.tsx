@@ -10,6 +10,7 @@ import getPokemonsList from "@/service/getPokemonsList";
 import { InferGetStaticPropsType } from "next";
 import { pokemonCard } from "@/types/pokemon";
 import handleSentry from "@/screens/HomeScreen/utils/handleSentry";
+import Header from "@/components/Header";
 
 export const getStaticProps = async () => {
   try {
@@ -102,6 +103,7 @@ export default function HomePage({
 
   return (
     <HomePageContext.Provider value={context}>
+      <Header />
       <HomeScreen />
     </HomePageContext.Provider>
   );
