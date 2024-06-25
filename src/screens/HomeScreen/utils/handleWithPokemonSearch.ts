@@ -5,10 +5,9 @@ import handleSentry from "./handleSentry";
 async function handleWithPokemonSearch(
   e: React.FormEvent<HTMLFormElement>,
   searchInput: string,
-  setSearchInput: setState<string>,
   setPokemonsList: setState<pokemonCard[]>,
   sentry: handleSentry,
-  setTypeFilter: setState<string>
+  cleanFiltersInput: () => void
 ) {
   e.preventDefault();
 
@@ -33,8 +32,7 @@ async function handleWithPokemonSearch(
   }
 
   sentry.disable();
-  setSearchInput("");
-  setTypeFilter("base");
+  cleanFiltersInput();
 }
 
 export default handleWithPokemonSearch;

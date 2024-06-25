@@ -8,9 +8,9 @@ async function returnToInitialPokemonsList(
   setUrlPokemonsList: setState<string>,
   setPokemonsList: setState<pokemonCard[]>,
   sentry: handleSentry,
-  setTypeFilter: setState<string>
+  cleanFiltersInput: () => void
 ) {
-  setTypeFilter("base");
+  cleanFiltersInput();
   setPokemonsList([]);
   await getPokemonsList(baseUrlPokemonsList, {
     local: "client",

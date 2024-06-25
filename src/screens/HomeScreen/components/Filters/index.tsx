@@ -10,6 +10,11 @@ export default function Filters() {
   const [searchInput, setSearchInput] = useState("");
   const [typeFilter, setTypeFilter] = useState("base");
 
+  const cleanFiltersInputs = () => {
+    setSearchInput("");
+    setTypeFilter("");
+  };
+
   const {
     setPokemonsList,
     setUrlPokemonsList,
@@ -27,7 +32,7 @@ export default function Filters() {
             setUrlPokemonsList,
             setPokemonsList,
             sentry,
-            setTypeFilter
+            cleanFiltersInputs
           )
         }
       >
@@ -38,10 +43,9 @@ export default function Filters() {
           handleWithPokemonSearch(
             e,
             searchInput,
-            setSearchInput,
             setPokemonsList,
             sentry,
-            setTypeFilter
+            cleanFiltersInputs
           )
         }
       >
@@ -75,7 +79,7 @@ export default function Filters() {
             setUrlPokemonsList,
             baseUrlPokemonsList,
             sentry,
-            setTypeFilter
+            cleanFiltersInputs
           );
         }}
       >

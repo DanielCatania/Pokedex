@@ -10,7 +10,7 @@ function handleChangePokemonFilterType(
   setUrlPokemonsList: setState<string>,
   baseUrlPokemonsList: string,
   sentry: handleSentry,
-  setTypeFilter: setState<string>
+  cleanFiltersInput: () => void
 ) {
   if (e.target.value === "base") {
     returnToInitialPokemonsList(
@@ -18,7 +18,7 @@ function handleChangePokemonFilterType(
       setUrlPokemonsList,
       setPokemonsList,
       sentry,
-      setTypeFilter
+      cleanFiltersInput
     );
 
     return;
