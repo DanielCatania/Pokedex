@@ -20,6 +20,10 @@ const GlobalStyle = createGlobalStyle`
     flex: 1;
     flex-direction: column;
   }
+  body {
+    font-family: ${({ theme }) => theme.fonts.family};
+    color: ${({ theme }) => theme.colors["text"]};
+  }
   #__next {
     width: 100%;
     overflow: hidden;
