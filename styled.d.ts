@@ -1,21 +1,24 @@
 import "styled-components";
 
-type color = {
-  "050": string;
-  "100": string;
-  "150": string;
-  "200": string;
-  "250": string;
-};
-
 declare module "styled-components" {
   export interface DefaultTheme {
     colors: {
-      primary: color;
-      neutral: color;
+      primary: string;
+      secondary: string;
+      background: string;
+      text: string;
+      error: string;
     };
-    font: {
+    fonts: {
       family: string;
+      size: {
+        base: string;
+        heading1: string;
+        heading2: string;
+        heading3: string;
+        body1: string;
+        body2: string;
+      };
     };
   }
 }

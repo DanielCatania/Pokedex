@@ -2,23 +2,22 @@ import { DefaultTheme } from "styled-components/dist/types";
 
 const theme: DefaultTheme = {
   colors: {
-    primary: {
-      "050": "#ff0000",
-      "100": "#cc0000",
-      "150": "#3b4cca",
-      "200": "#ffde00",
-      "250": "#b3a125",
-    },
-    neutral: {
-      "050": "#f5f5f5",
-      "100": "##9d9d9d",
-      "150": "#888888",
-      "200": "#4e4e4e",
-      "250": "#000",
-    },
+    primary: "#dc3545",
+    secondary: "#ffc107",
+    background: "#fff",
+    text: "#212529",
+    error: "#8B0000",
   },
-  font: {
-    family: "'Open sans', sans-serif",
+  fonts: {
+    family: '"Open Sans", sans-serif',
+    size: {
+      base: "1rem",
+      heading1: "clamp(2.8rem, 3.2rem, 4rem)",
+      heading2: "clamp(2.2rem, 2.8rem, 3rem)",
+      heading3: "clamp(1.6rem, 2.2rem, 2.4rem)",
+      body1: "1.6rem",
+      body2: "1.4rem",
+    },
   },
 };
 
