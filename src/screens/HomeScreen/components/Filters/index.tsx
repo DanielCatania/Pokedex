@@ -4,11 +4,11 @@ import { HomePageContext } from "@/pages";
 
 import handleChangePokemonFilterType from "../../utils/handleChangePokemonFilterType";
 import handleWithPokemonSearch from "../../utils/handleWithPokemonSearch";
-import handleChangeSearchInput from "../../utils/handleChangeSearchInput";
 import returnToInitialPokemonsList from "../../utils/returnToInitialPokemonsList";
 
 export default function Filters() {
   const [searchInput, setSearchInput] = useState("");
+  const [typeFilter, setTypeFilter] = useState("base");
 
   const {
     setPokemonsList,
@@ -26,7 +26,8 @@ export default function Filters() {
             baseUrlPokemonsList,
             setUrlPokemonsList,
             setPokemonsList,
-            sentry
+            sentry,
+            setTypeFilter
           )
         }
       >
@@ -39,7 +40,8 @@ export default function Filters() {
             searchInput,
             setSearchInput,
             setPokemonsList,
-            sentry
+            sentry,
+            setTypeFilter
           )
         }
       >
@@ -47,7 +49,7 @@ export default function Filters() {
           type="text"
           placeholder="Search pokemon by name"
           value={searchInput}
-          onChange={(e) => handleChangeSearchInput(e, setSearchInput)}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
         <button type="submit">
           <svg
@@ -64,15 +66,18 @@ export default function Filters() {
       <select
         name="type"
         id="type"
-        onChange={(e) =>
+        value={typeFilter}
+        onChange={(e) => {
+          setTypeFilter(e.target.value);
           handleChangePokemonFilterType(
             e,
             setPokemonsList,
             setUrlPokemonsList,
             baseUrlPokemonsList,
-            sentry
-          )
-        }
+            sentry,
+            setTypeFilter
+          );
+        }}
       >
         <option value="base">Find Pokemon By Type</option>
         {types.map((type, i) => (

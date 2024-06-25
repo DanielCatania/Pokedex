@@ -7,8 +7,10 @@ async function returnToInitialPokemonsList(
   baseUrlPokemonsList: string,
   setUrlPokemonsList: setState<string>,
   setPokemonsList: setState<pokemonCard[]>,
-  sentry: handleSentry
+  sentry: handleSentry,
+  setTypeFilter: setState<string>
 ) {
+  setTypeFilter("base");
   setPokemonsList([]);
   await getPokemonsList(baseUrlPokemonsList, {
     local: "client",

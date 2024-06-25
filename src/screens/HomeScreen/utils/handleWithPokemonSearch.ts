@@ -7,7 +7,8 @@ async function handleWithPokemonSearch(
   searchInput: string,
   setSearchInput: setState<string>,
   setPokemonsList: setState<pokemonCard[]>,
-  sentry: handleSentry
+  sentry: handleSentry,
+  setTypeFilter: setState<string>
 ) {
   e.preventDefault();
 
@@ -33,6 +34,7 @@ async function handleWithPokemonSearch(
 
   sentry.disable();
   setSearchInput("");
+  setTypeFilter("base");
 }
 
 export default handleWithPokemonSearch;

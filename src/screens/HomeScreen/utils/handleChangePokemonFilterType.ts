@@ -9,14 +9,16 @@ function handleChangePokemonFilterType(
   setPokemonsList: setState<pokemonCard[]>,
   setUrlPokemonsList: setState<string>,
   baseUrlPokemonsList: string,
-  sentry: handleSentry
+  sentry: handleSentry,
+  setTypeFilter: setState<string>
 ) {
   if (e.target.value === "base") {
     returnToInitialPokemonsList(
       baseUrlPokemonsList,
       setUrlPokemonsList,
       setPokemonsList,
-      sentry
+      sentry,
+      setTypeFilter
     );
 
     return;
