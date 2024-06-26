@@ -8,6 +8,7 @@ import returnToInitialPokemonsList from "../../utils/returnToInitialPokemonsList
 
 export default function Filters() {
   const [searchInput, setSearchInput] = useState("");
+  const [isFiltering, setIsFiltering] = useState(false);
   const [typeFilter, setTypeFilter] = useState("base");
 
   const cleanFiltersInputs = () => {
@@ -25,29 +26,34 @@ export default function Filters() {
 
   return (
     <>
-      <button
-        onClick={(e) =>
-          returnToInitialPokemonsList(
-            baseUrlPokemonsList,
-            setUrlPokemonsList,
-            setPokemonsList,
-            sentry,
-            cleanFiltersInputs
-          )
-        }
-      >
-        reset filters
-      </button>
+      {isFiltering ? (
+        <button
+          onClick={(e) => {
+            setIsFiltering(false);
+            returnToInitialPokemonsList(
+              baseUrlPokemonsList,
+              setUrlPokemonsList,
+              setPokemonsList,
+              sentry,
+              cleanFiltersInputs
+            );
+          }}
+        >
+          reset filters
+        </button>
+      ) : null}
+
       <form
-        onSubmit={(e) =>
+        onSubmit={(e) => {
+          setIsFiltering(true);
           handleWithPokemonSearch(
             e,
             searchInput,
             setPokemonsList,
             sentry,
             cleanFiltersInputs
-          )
-        }
+          );
+        }}
       >
         <input
           type="text"
@@ -73,6 +79,7 @@ export default function Filters() {
         value={typeFilter}
         onChange={(e) => {
           setTypeFilter(e.target.value);
+          setIsFiltering(true);
           handleChangePokemonFilterType(
             e,
             setPokemonsList,
